@@ -9,22 +9,20 @@ elements.crude_oil = {
 };
 
 elements.crude_oil.tick = function(pixel) {
-    // Sandboxels' native random neighbor finder (safely looks up/left/right)
-    let spots = [[0,-1], [-1,-1], [1,-1], [-1,0]];
-    let spot = spots[Math.floor(Math.random() * spots.length)];
-    let tx = pixel.x + spot[0];
-    let ty = pixel.y + spot[1];
-
-    if (isEmpty(tx, ty) && Math.random() < 0.1) {
-        if (pixel.temp >= 350) {
-            createPixel("diesel_vapor", tx, ty);
-            changePixel(pixel, "heavy_fuel_oil");
-        } else if (pixel.temp >= 200) {
-            createPixel("kerosene_vapor", tx, ty);
-        } else if (pixel.temp >= 120) {
-            createPixel("gasoline_vapor", tx, ty);
-        } else if (pixel.temp >= 40) {
-            createPixel("petroleum_gas", tx, ty);
+    // Only try to vaporize 10% of the time to keep the simulation smooth
+    if (Math.random() < 0.1) {
+        // Look directly at the pixel right above us (0, -1)
+        if (isEmpty(pixel.x, pixel.y - 1)) {
+            if (pixel.temp >= 350) {
+                createPixel("diesel_vapor", pixel.x, pixel.y - 1);
+                changePixel(pixel, "heavy_fuel_oil");
+            } else if (pixel.temp >= 200) {
+                createPixel("kerosene_vapor", pixel.x, pixel.y - 1);
+            } else if (pixel.temp >= 120) {
+                createPixel("gasoline_vapor", pixel.x, pixel.y - 1);
+            } else if (pixel.temp >= 40) {
+                createPixel("petroleum_gas", pixel.x, pixel.y - 1);
+            }
         }
     }
 };
@@ -179,3 +177,4 @@ elements.petroleum_plastic = {
         "acid": { elem1: "toxic_gas", chance: 0.01 }
     }
 };
+
