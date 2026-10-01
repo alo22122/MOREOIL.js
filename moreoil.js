@@ -9,9 +9,7 @@ elements.crude_oil = {
 };
 
 elements.crude_oil.tick = function(pixel) {
-    // Only try to vaporize 10% of the time to keep the simulation smooth
     if (Math.random() < 0.1) {
-        // Look directly at the pixel right above us (0, -1)
         if (isEmpty(pixel.x, pixel.y - 1)) {
             if (pixel.temp >= 350) {
                 createPixel("diesel_vapor", pixel.x, pixel.y - 1);
@@ -37,7 +35,7 @@ elements.petroleum_gas = {
     state: "gas",
     burn: 100,
     burnTime: 20,
-    fireColor: "#0055ff", // Burns hot blue
+    fireColor: "#0055ff",
     reactions: {
         "oxygen": { elem1: "carbon_dioxide", elem2: "steam", chance: 0.2 },
         "chlorine": { elem1: "hydrochloric_acid", elem2: "plastic_slurry", chance: 0.05 } 
@@ -177,4 +175,3 @@ elements.petroleum_plastic = {
         "acid": { elem1: "toxic_gas", chance: 0.01 }
     }
 };
-
