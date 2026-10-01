@@ -6,23 +6,8 @@ elements.crude_oil = {
     viscosity: 800,
     density: 880,
     state: "liquid",
-};
-
-elements.crude_oil.tick = function(pixel) {
-    if (Math.random() < 0.1) {
-        if (isEmpty(pixel.x, pixel.y - 1)) {
-            if (pixel.temp >= 350) {
-                createPixel("diesel_vapor", pixel.x, pixel.y - 1);
-                changePixel(pixel, "heavy_fuel_oil");
-            } else if (pixel.temp >= 200) {
-                createPixel("kerosene_vapor", pixel.x, pixel.y - 1);
-            } else if (pixel.temp >= 120) {
-                createPixel("gasoline_vapor", pixel.x, pixel.y - 1);
-            } else if (pixel.temp >= 40) {
-                createPixel("petroleum_gas", pixel.x, pixel.y - 1);
-            }
-        }
-    }
+    tempHigh: 40,            // First boiling threshold
+    stateHigh: "petroleum_gas"
 };
 
 // 2. THE FRACTIONS (LIQUIDS & VAPORS)
@@ -35,11 +20,7 @@ elements.petroleum_gas = {
     state: "gas",
     burn: 100,
     burnTime: 20,
-    fireColor: "#0055ff",
-    reactions: {
-        "oxygen": { elem1: "carbon_dioxide", elem2: "steam", chance: 0.2 },
-        "chlorine": { elem1: "hydrochloric_acid", elem2: "plastic_slurry", chance: 0.05 } 
-    }
+    fireColor: "#0055ff"
 };
 
 // --- Gasoline ---
@@ -52,11 +33,7 @@ elements.gasoline_liquid = {
     burnTime: 40,
     fireColor: "#ff7700",
     tempHigh: 120,
-    stateHigh: "gasoline_vapor",
-    reactions: {
-        "fire": { elem1: "explosion", chance: 0.1 }, 
-        "acid": { elem1: "toxic_gas", elem2: "acid", chance: 0.02 }
-    }
+    stateHigh: "gasoline_vapor"
 };
 elements.gasoline_vapor = {
     color: "#f2ebd5",
@@ -66,11 +43,7 @@ elements.gasoline_vapor = {
     burn: 100,
     burnTime: 5,
     tempLow: 119,
-    stateLow: "gasoline_liquid",
-    reactions: {
-        "fire": { elem1: "explosion", chance: 0.5 },
-        "spark": { elem1: "explosion", chance: 0.8 } 
-    }
+    stateLow: "gasoline_liquid"
 };
 
 // --- Kerosene ---
@@ -82,10 +55,7 @@ elements.kerosene_liquid = {
     burn: 80,
     burnTime: 80, 
     tempHigh: 200,
-    stateHigh: "kerosene_vapor",
-    reactions: {
-        "water": { elem1: "kerosene_liquid", elem2: "water", chance: 1, color1: "#b0d4de" } 
-    }
+    stateHigh: "kerosene_vapor"
 };
 elements.kerosene_vapor = {
     color: "#cbdbe0",
@@ -113,10 +83,7 @@ elements.diesel_vapor = {
     behavior: behaviors.GAS,
     category: "gases",
     tempLow: 349,
-    stateLow: "diesel_liquid",
-    reactions: {
-        "pressure": { elem1: "fire", chance: 0.2 } 
-    }
+    stateLow: "diesel_liquid"
 };
 
 // --- Heavy Fuel Oil & Bitumen ---
@@ -135,43 +102,5 @@ elements.bitumen = {
     color: "#0a0908",
     behavior: behaviors.MUD, 
     category: "solids",
-    density: 1050,
-    reactions: {
-        "sand": { elem1: "asphalt_pavement", elem2: "asphalt_pavement", chance: 0.1 }, 
-        "gravel": { elem1: "asphalt_pavement", elem2: "asphalt_pavement", chance: 0.1 }
-    }
-};
-
-// 3. CHEMICAL DERIVATIVES
-
-// --- Asphalt Pavement ---
-elements.asphalt_pavement = {
-    color: "#333333",
-    behavior: behaviors.WALL, 
-    category: "solids",
-    tempHigh: 150,
-    stateHigh: "bitumen" 
-};
-
-// --- Plastic Slurry & Solid Plastic ---
-elements.plastic_slurry = {
-    color: "#e1e6e1",
-    behavior: behaviors.LIQUID,
-    category: "liquids",
-    density: 900,
-    tempLow: 60,
-    stateLow: "petroleum_plastic" 
-};
-elements.petroleum_plastic = {
-    color: "#e1e6e1",
-    behavior: behaviors.WALL,
-    category: "solids",
-    burn: 30,
-    burnTime: 100,
-    fireColor: "#ff0044",
-    tempHigh: 180,
-    stateHigh: "plastic_slurry",
-    reactions: {
-        "acid": { elem1: "toxic_gas", chance: 0.01 }
-    }
+    density: 1050
 };
